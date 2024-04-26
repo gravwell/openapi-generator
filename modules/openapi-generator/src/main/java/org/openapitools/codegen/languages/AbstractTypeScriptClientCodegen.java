@@ -620,6 +620,9 @@ public abstract class AbstractTypeScriptClientCodegen extends DefaultCodegen imp
     public String getTypeDeclaration(Schema p) {
         if (ModelUtils.isArraySchema(p)) {
             Schema<?> items = getSchemaItems((ArraySchema) p);
+            if (Boolean.TRUE.equals(unaliasSchema(items).getNullable())) {
+                return getSchemaType(p) + "<" + getTypeDeclaration(unaliasSchema(items)) + " | null>";
+            }
             return getSchemaType(p) + "<" + getTypeDeclaration(unaliasSchema(items)) + ">";
         } else if (ModelUtils.isMapSchema(p)) {
             Schema<?> inner = getSchemaAdditionalProperties(p);
